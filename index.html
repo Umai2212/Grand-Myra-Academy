@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grand Myra Academy — Tumkur's Premier Coaching Institute</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+:root {
+  --bg:#f8fafc;
+  --nav-bg:rgba(255,255,255,0.98);
+  --navy:#0f172a;
+  --deep:#1e2937;
+  --card:#ffffff;
+  --border:#e2e8f0;
+  --accent:#1e40af;
+  --accent2:#3b82f6;
+  --accent3:#2563eb;
+  --text:#0f172a;
+  --muted:#64748b;
+  --white:#ffffff;
+  --radius:16px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;overflow-x:hidden;cursor:none;}
+
+#cur{width:10px;height:10px;background:var(--accent);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);box-shadow:0 0 20px rgba(30,64,175,.6);}
+#cur-ring{width:40px;height:40px;border:1.8px solid rgba(30,64,175,.35);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .1s;}
+#pcanvas{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.35;}
+
+/* NAV */
+nav{position:fixed;top:0;width:100%;z-index:1000;padding:0 6vw;height:76px;display:flex;align-items:center;justify-content:space-between;background:var(--nav-bg);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:height .3s;box-shadow:0 4px 20px rgba(15,23,42,.08);}
+nav.scrolled{height:64px;}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.65rem;font-weight:700;color:var(--navy);text-decoration:none;letter-spacing:.4px;}
+.logo span{color:var(--accent);}
+.logo sub{font-size:.58rem;font-family:'Outfit',sans-serif;color:var(--muted);font-weight:500;letter-spacing:1.8px;vertical-align:middle;margin-left:4px;}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.9rem;font-weight:600;letter-spacing:.4px;transition:color .2s;}
+.nav-links a:hover{color:var(--accent);}
+.nav-cta{background:var(--accent)!important;color:var(--white)!important;padding:.55rem 1.5rem;border-radius:10px;font-weight:700!important;box-shadow:0 6px 25px rgba(30,64,175,.3);transition:all .3s;}
+.nav-cta:hover{background:var(--accent2)!important;transform:translateY(-3px);box-shadow:0 10px 35px rgba(30,64,175,.45);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;}
+.hamburger span{width:26px;height:2.5px;background:var(--navy);border-radius:2px;transition:all .3s;}
+.mobile-nav{position:fixed;inset:0;z-index:999;background:rgba(15,23,42,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.2rem;transform:translateX(100%);transition:transform .45s cubic-bezier(0.32,0.72,0,1);}
+.mobile-nav.open{transform:translateX(0);}
+.mobile-nav a{color:var(--white);text-decoration:none;font-size:1.35rem;font-weight:600;transition:color .2s;}
+.mobile-nav a:hover{color:var(--accent2);}
+.close-nav{position:absolute;top:1.8rem;right:1.8rem;background:none;border:none;color:var(--muted);font-size:1.8rem;cursor:pointer;}
+
+/* HERO - FULL LARGE IMAGE */
+#hero{min-height:100vh;position:relative;display:flex;align-items:center;padding:100px 6vw 60px;overflow:hidden;}
+#hero::before{content:'';position:absolute;inset:0;background:linear-gradient(to right,rgba(15,23,42,.82) 0%,rgba(15,23,42,.55) 45%,transparent 75%),linear-gradient(to bottom,rgba(15,23,42,.45) 0%,transparent 60%);z-index:1;}
+#hero::after{content:'';position:absolute;inset:0;background:url('Grand-Myra-Academy.jpg') center/cover no-repeat;z-index:0;filter:brightness(0.92) saturate(1.15);}
+.hero-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 75% at 18% 48%,rgba(59,130,246,.12) 0%,transparent 65%),radial-gradient(ellipse 35% 45% at 78% 22%,rgba(59,130,246,.08) 0%,transparent 70%);z-index:2;}
+.hero-diag{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:2;}
+.hero-diag::before,.hero-diag::after{content:'';position:absolute;width:1px;height:220%;background:linear-gradient(to bottom,transparent,rgba(59,130,246,.25),transparent);animation:diag 10s linear infinite;}
+.hero-diag::before{left:22%;} .hero-diag::after{left:68%;animation-duration:13s;animation-delay:-3.5s;}
+@keyframes diag{0%{transform:translateY(-60%);}100%{transform:translateY(0);}}
+.orb{position:absolute;border-radius:50%;pointer-events:none;animation:odrift 13s ease-in-out infinite;z-index:2;}
+.orb1{width:340px;height:340px;top:-60px;right:8%;background:radial-gradient(circle,rgba(59,130,246,.09),transparent 65%);animation-duration:16s;}
+.orb2{width:240px;height:240px;bottom:12%;left:6%;background:radial-gradient(circle,rgba(147,197,253,.07),transparent 70%);animation-duration:11s;animation-delay:-6s;}
+@keyframes odrift{0%,100%{transform:translate(0,0);}30%{transform:translate(25px,-25px);}70%{transform:translate(-15px,20px);}}
+
+.hero-content{position:relative;z-index:3;max-width:620px;}
+.hero-tag{display:inline-flex;align-items:center;gap:.6rem;background:rgba(30,64,175,.12);border:1px solid rgba(59,130,246,.3);padding:.38rem 1rem;border-radius:50px;font-size:.76rem;font-weight:700;color:#93c5fd;letter-spacing:1.6px;text-transform:uppercase;margin-bottom:1.6rem;opacity:0;transform:translateY(20px);}
+.hero-tag::before{content:'';width:7px;height:7px;background:#93c5fd;border-radius:50%;animation:pulse 2.2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.35;transform:scale(1.6);}}
+h1.hero-headline{font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,5vw,4.6rem);font-weight:700;line-height:1.06;color:var(--white);margin-bottom:1.6rem;opacity:0;transform:translateY(25px);}
+h1.hero-headline em{font-style:italic;background:linear-gradient(110deg,var(--accent2),#93c5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-sub{font-size:1.05rem;color:#e2e8f0;line-height:1.78;max-width:520px;margin-bottom:2.8rem;opacity:0;transform:translateY(20px);}
+.hero-btns{display:flex;gap:1.1rem;flex-wrap:wrap;opacity:0;transform:translateY(20px);}
+.btn-primary{background:linear-gradient(135deg,var(--accent3),var(--accent));color:var(--white);padding:.95rem 2.4rem;border-radius:12px;font-weight:700;font-size:.97rem;text-decoration:none;border:none;cursor:pointer;box-shadow:0 8px 32px rgba(30,64,175,.4);transition:all .3s;display:inline-block;}
+.btn-primary:hover{transform:translateY(-4px);box-shadow:0 14px 45px rgba(30,64,175,.55);}
+.btn-outline{background:transparent;color:var(--white);padding:.95rem 2.4rem;border-radius:12px;font-weight:600;font-size:.97rem;text-decoration:none;border:1.8px solid rgba(255,255,255,.6);cursor:pointer;transition:all .3s;display:inline-block;}
+.btn-outline:hover{border-color:var(--accent2);color:var(--accent2);}
+.hero-stats{display:flex;gap:2.8rem;margin-top:3.2rem;opacity:0;transform:translateY(20px);}
+.hero-stat h3{font-family:'Cormorant Garamond',serif;font-size:2.45rem;font-weight:700;color:var(--white);}
+.hero-stat h3 span{color:#93c5fd;}
+.hero-stat p{font-size:.8rem;color:#cbd5e1;margin-top:.2rem;letter-spacing:.4px;}
+
+/* SHARED */
+section{padding:110px 6vw;position:relative;z-index:1;}
+.section-tag{display:inline-block;color:var(--accent);font-size:.78rem;font-weight:700;letter-spacing:2.8px;text-transform:uppercase;margin-bottom:.9rem;}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,3.2vw,3.2rem);font-weight:700;color:var(--navy);line-height:1.12;margin-bottom:1.1rem;}
+.section-title em{font-style:italic;color:var(--accent2);}
+.section-sub{color:var(--muted);font-size:1.02rem;line-height:1.78;max-width:560px;margin-bottom:3.2rem;}
+.reveal{opacity:0;transform:translateY(38px);}
+
+/* COURSES */
+#courses{background:#f1f5f9;}
+.courses-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1.5rem;}
+.course-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;position:relative;overflow:hidden;transition:all .35s;box-shadow:0 10px 30px rgba(0,0,0,.06);}
+.course-card::after{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--accent3),var(--accent2));transform:scaleX(0);transform-origin:left;transition:transform .45s;}
+.course-card:hover{transform:translateY(-8px);border-color:var(--accent);box-shadow:0 25px 70px rgba(30,64,175,.15);}
+.course-card:hover::after{transform:scaleX(1);}
+.course-priority{display:inline-block;background:rgba(30,64,175,.1);border:1px solid rgba(59,130,246,.25);color:var(--accent2);font-size:.7rem;font-weight:700;padding:.25rem .8rem;border-radius:50px;letter-spacing:.6px;margin-bottom:1.1rem;}
+.course-priority.hot{background:rgba(59,130,246,.12);border-color:rgba(147,197,253,.3);color:#2563eb;}
+.course-icon{font-size:2.6rem;display:block;margin-bottom:.9rem;}
+.course-card h3{font-size:1.18rem;font-weight:700;color:var(--navy);margin-bottom:.6rem;}
+.course-card p{font-size:.9rem;color:var(--muted);line-height:1.68;}
+
+/* WHY */
+.why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.5rem;}
+.why-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;transition:all .35s;box-shadow:0 10px 30px rgba(0,0,0,.05);}
+.why-card:hover{transform:translateY(-6px);box-shadow:0 22px 55px rgba(30,64,175,.12);border-color:var(--accent);}
+.why-icon{width:58px;height:58px;border-radius:14px;background:linear-gradient(135deg,rgba(59,130,246,.12),rgba(147,197,253,.08));border:1px solid rgba(59,130,246,.2);display:flex;align-items:center;justify-content:center;font-size:1.65rem;margin-bottom:1.1rem;}
+.why-card h3{font-size:1.05rem;font-weight:700;color:var(--navy);margin-bottom:.55rem;}
+.why-card p{font-size:.88rem;color:var(--muted);line-height:1.68;}
+
+/* ACHIEVERS */
+#achievers{background:var(--bg);}
+.achievers-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;}
+.achiever-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all .4s;box-shadow:0 12px 35px rgba(0,0,0,.06);position:relative;}
+.achiever-card:hover{transform:translateY(-8px) scale(1.02);border-color:var(--accent);box-shadow:0 30px 75px rgba(30,64,175,.18);}
+.achiever-img{width:100%;height:245px;object-fit:cover;object-position:top center;display:block;transition:transform .5s;}
+.achiever-card:hover .achiever-img{transform:scale(1.06);}
+.achiever-overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(15,23,42,.92) 0%,rgba(15,23,42,.65) 55%,transparent 100%);padding:1.3rem 1.1rem .95rem;}
+.achiever-rank{display:inline-block;background:linear-gradient(135deg,var(--accent3),var(--accent2));color:var(--white);font-size:.7rem;font-weight:800;padding:.25rem .75rem;border-radius:50px;letter-spacing:.5px;margin-bottom:.6rem;}
+.achiever-name{font-size:1rem;font-weight:700;color:var(--white);}
+.achiever-desc{font-size:.8rem;color:#93c5fd;margin-top:.25rem;font-weight:600;}
+.achiever-year{font-size:.76rem;color:#cbd5e1;margin-top:.2rem;}
+
+/* RESULTS */
+#results{background:#f1f5f9;}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin-bottom:4.5rem;}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:2.2rem 1.6rem;text-align:center;transition:all .3s;box-shadow:0 10px 30px rgba(0,0,0,.06);position:relative;overflow:hidden;}
+.stat-box::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent3),var(--accent2));}
+.stat-box:hover{transform:translateY(-5px);box-shadow:0 20px 50px rgba(30,64,175,.12);}
+.stat-box h2{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:700;color:var(--navy);}
+.stat-box h2 span{color:var(--accent);}
+.stat-box p{font-size:.86rem;color:var(--muted);margin-top:.5rem;font-weight:600;}
+.testimonials-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1.5rem;}
+.testimonial-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;transition:all .3s;box-shadow:0 10px 30px rgba(0,0,0,.05);}
+.testimonial-card:hover{transform:translateY(-5px);border-color:var(--accent);box-shadow:0 20px 50px rgba(0,0,0,.08);}
+.stars{color:var(--accent);font-size:1.05rem;margin-bottom:1.1rem;letter-spacing:3px;}
+.testimonial-card p{font-size:.9rem;color:var(--muted);line-height:1.75;font-style:italic;margin-bottom:1.3rem;}
+.t-author{display:flex;align-items:center;gap:.9rem;}
+.t-avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--accent3),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.05rem;color:white;flex-shrink:0;}
+.t-author h4{font-size:.93rem;font-weight:700;color:var(--navy);}
+.t-author p{font-size:.8rem;color:var(--muted);}
+
+/* FACULTY */
+#faculty{background:var(--bg);}
+.faculty-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:1.6rem;}
+.faculty-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;text-align:center;transition:all .35s;overflow:hidden;position:relative;box-shadow:0 10px 30px rgba(0,0,0,.06);}
+.faculty-card:hover{transform:translateY(-8px);box-shadow:0 28px 65px rgba(30,64,175,.15);border-color:var(--accent);}
+.faculty-card.featured{border-color:var(--accent);background:linear-gradient(160deg,rgba(59,130,246,.07),var(--card));}
+.faculty-card.featured::before{content:'★ Founder';position:absolute;top:14px;right:14px;background:rgba(30,64,175,.12);border:1px solid rgba(59,130,246,.3);color:var(--accent2);font-size:.68rem;font-weight:700;padding:.25rem .7rem;border-radius:50px;letter-spacing:.4px;}
+.faculty-photo{width:98px;height:98px;border-radius:50%;margin:0 auto 1.1rem;display:block;object-fit:cover;object-position:top;border:4px solid rgba(59,130,246,.25);box-shadow:0 0 0 8px rgba(59,130,246,.08);}
+.faculty-card.featured .faculty-photo{border-color:var(--accent2);box-shadow:0 0 0 8px rgba(59,130,246,.15);}
+.faculty-card h3{font-size:1.02rem;font-weight:700;color:var(--navy);margin-bottom:.35rem;}
+.faculty-subject{font-size:.87rem;color:var(--accent2);font-weight:600;margin-bottom:.3rem;}
+.faculty-degree{font-size:.78rem;color:var(--muted);margin-bottom:.6rem;}
+.faculty-exp{display:inline-block;background:rgba(59,130,246,.1);border:1px solid rgba(147,197,253,.25);color:var(--accent2);font-size:.73rem;font-weight:700;padding:.25rem .75rem;border-radius:50px;}
+
+/* HOW */
+#how{background:#f1f5f9;}
+.steps-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1.8rem;position:relative;}
+.steps-row::before{content:'';position:absolute;top:48px;left:12%;right:12%;height:2px;background:linear-gradient(90deg,transparent,var(--accent),var(--accent2),var(--accent),transparent);opacity:.35;}
+.step-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:2.2rem;text-align:center;transition:all .35s;box-shadow:0 10px 30px rgba(0,0,0,.06);}
+.step-card:hover{transform:translateY(-6px);box-shadow:0 24px 60px rgba(30,64,175,.14);border-color:var(--accent);}
+.step-number{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--accent3),var(--accent2));display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:700;color:white;margin:0 auto 1.3rem;box-shadow:0 0 0 10px rgba(59,130,246,.12);}
+.step-card h3{font-size:1.08rem;font-weight:700;color:var(--navy);margin-bottom:.6rem;}
+.step-card p{font-size:.88rem;color:var(--muted);line-height:1.7;}
+
+/* DIGITAL */
+#digital{background:linear-gradient(135deg,#f8fafc,#e0f2fe);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.digital-inner{display:grid;grid-template-columns:1fr 1fr;gap:5.5rem;align-items:center;}
+.digital-list{list-style:none;margin-top:1.6rem;}
+.digital-list li{display:flex;align-items:flex-start;gap:1rem;padding:.9rem 0;border-bottom:1px solid var(--border);font-size:.93rem;color:var(--muted);line-height:1.65;}
+.digital-list li:last-child{border-bottom:none;}
+.digital-list li::before{content:'→';color:var(--accent);font-weight:700;flex-shrink:0;margin-top:.08rem;}
+.dv-stack{display:flex;flex-direction:column;gap:1.2rem;}
+.dv-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.3rem 1.5rem;display:flex;align-items:center;gap:1.1rem;transition:all .3s;box-shadow:0 8px 25px rgba(0,0,0,.05);}
+.dv-card:hover{border-color:var(--accent);box-shadow:0 15px 40px rgba(30,64,175,.1);}
+.dv-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;background:rgba(59,130,246,.1);}
+.dv-text h4{font-size:.93rem;font-weight:700;color:var(--navy);}
+.dv-text p{font-size:.8rem;color:var(--muted);margin-top:.15rem;}
+
+/* CTA */
+#cta-banner{text-align:center;padding:90px 6vw;background:linear-gradient(135deg,#0f172a,#1e2937);color:white;position:relative;overflow:hidden;}
+#cta-banner::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 65% 65% at 50% 45%,rgba(59,130,246,.15) 0%,transparent 75%);z-index:0;}
+.batch-badge{display:inline-block;background:rgba(147,197,253,.15);border:1px solid rgba(147,197,253,.35);color:#bae6fd;font-size:.8rem;font-weight:700;padding:.4rem 1.3rem;border-radius:50px;letter-spacing:1.2px;margin-bottom:1.6rem;}
+
+/* CONTACT */
+#contact{background:var(--bg);}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:start;}
+.contact-form{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:2.4rem;box-shadow:0 15px 40px rgba(0,0,0,.06);}
+.contact-form input,.contact-form select,.contact-form textarea{width:100%;background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:.95rem 1.2rem;color:var(--text);font-size:.93rem;font-family:'Outfit',sans-serif;outline:none;transition:border-color .2s;margin-bottom:1.1rem;display:block;}
+.contact-form input:focus,.contact-form select:focus,.contact-form textarea:focus{border-color:var(--accent);}
+.contact-form textarea{resize:none;}
+.contact-form select option{background:#f8fafc;}
+.contact-info{display:flex;flex-direction:column;gap:1.2rem;}
+.ci-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;display:flex;align-items:center;gap:1.1rem;transition:all .3s;box-shadow:0 8px 25px rgba(0,0,0,.05);}
+.ci-card:hover{border-color:var(--accent);box-shadow:0 15px 40px rgba(30,64,175,.1);}
+.ci-icon{width:50px;height:50px;border-radius:12px;background:rgba(59,130,246,.1);display:flex;align-items:center;justify-content:center;font-size:1.35rem;flex-shrink:0;}
+.ci-card h4{font-size:.93rem;font-weight:700;color:var(--navy);}
+.ci-card p{font-size:.84rem;color:var(--muted);margin-top:.2rem;}
+
+/* FOOTER */
+footer{background:var(--navy);color:#e2e8f0;padding:65px 6vw 35px;border-top:1px solid #334155;}
+.footer-grid{display:grid;grid-template-columns:2.2fr 1fr 1fr 1.6fr;gap:3.5rem;margin-bottom:3rem;}
+.footer-brand .logo{display:block;margin-bottom:1rem;color:white;}
+.footer-brand .logo span{color:#93c5fd;}
+.footer-brand p{font-size:.87rem;line-height:1.75;max-width:290px;color:#94a3b8;}
+.footer-col h4{font-size:.9rem;font-weight:700;color:white;margin-bottom:1.1rem;}
+.footer-col ul{list-style:none;}
+.footer-col ul li{margin-bottom:.65rem;}
+.footer-col ul li a{color:#94a3b8;text-decoration:none;font-size:.87rem;transition:color .2s;}
+.footer-col ul li a:hover{color:var(--accent2);}
+.footer-contact p{font-size:.87rem;line-height:1.85;color:#94a3b8;}
+.footer-contact p strong{color:#e2e8f0;}
+.footer-bottom{border-top:1px solid #334155;padding-top:1.8rem;display:flex;align-items:center;justify-content:space-between;font-size:.82rem;color:#94a3b8;}
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+  #hero{padding-top:130px;}
+  .digital-inner{grid-template-columns:1fr;gap:3rem;}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:2.5rem;}
+}
+@media(max-width:768px){
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .stats-row{grid-template-columns:repeat(2,1fr);}
+  .steps-row{grid-template-columns:1fr;}
+  .steps-row::before{display:none;}
+  .contact-grid{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr;}
+  .footer-bottom{flex-direction:column;gap:.8rem;text-align:center;}
+}
+@media(max-width:480px){
+  .achievers-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<canvas id="pcanvas"></canvas>
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<div class="mobile-nav" id="mobileNav">
+  <button class="close-nav" onclick="toggleNav()">✕</button>
+  <a href="#courses" onclick="toggleNav()">Courses</a>
+  <a href="#achievers" onclick="toggleNav()">Achievers</a>
+  <a href="#faculty" onclick="toggleNav()">Faculty</a>
+  <a href="#results" onclick="toggleNav()">Results</a>
+  <a href="#contact" onclick="toggleNav()">Contact</a>
+  <a href="#contact" onclick="toggleNav()" class="btn-primary" style="padding:.85rem 2.2rem;border-radius:12px;">Book Free Demo</a>
+</div>
+
+<nav id="navbar">
+  <a href="#" class="logo">Grand Myra <span>Academy</span><sub>TUMKUR</sub></a>
+  <ul class="nav-links">
+    <li><a href="#courses">Courses</a></li>
+    <li><a href="#achievers">Achievers</a></li>
+    <li><a href="#faculty">Faculty</a></li>
+    <li><a href="#results">Results</a></li>
+    <li><a href="#contact" class="nav-cta">Book Free Demo</a></li>
+  </ul>
+  <div class="hamburger" onclick="toggleNav()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-diag"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Tumkur's Premier Coaching Institute</div>
+    <h1 class="hero-headline">From Their <em>First Classroom</em><br>to Their Dream College</h1>
+    <p class="hero-sub">Grand Myra Academy — Tumkur's most trusted name for NEET, JEE, PUC, SSLC and foundational education from Kindergarten. Where every student's potential is a promise we keep.</p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn-primary">Book a Free Demo Class</a>
+      <a href="#courses" class="btn-outline">Explore Courses</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><h3>500<span>+</span></h3><p>Students Enrolled</p></div>
+      <div class="hero-stat"><h3>120<span>+</span></h3><p>NEET &amp; JEE Qualifiers</p></div>
+      <div class="hero-stat"><h3>15<span>+</span></h3><p>Years of Excellence</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- COURSES -->
+<section id="courses">
+  <div class="section-tag">What We Offer</div>
+  <h2 class="section-title">One Institute.<br><em>Every Stage</em> of Their Journey.</h2>
+  <p class="section-sub">From cracking India's toughest entrance exams to building strong foundations from Kindergarten — all under one roof in Tumkur.</p>
+  <div class="courses-grid">
+    <div class="course-card reveal">
+      <span class="course-priority hot">🔥 Flagship Course</span>
+      <span class="course-icon">🏥</span>
+      <h3>NEET Coaching</h3>
+      <p>Focused Biology, Physics and Chemistry preparation for MBBS and BDS aspirants. Consistent All India Rank qualifiers every year from Tumkur.</p>
+    </div>
+    <div class="course-card reveal">
+      <span class="course-priority hot">🔥 Flagship Course</span>
+      <span class="course-icon">⚙️</span>
+      <h3>JEE Coaching</h3>
+      <p>Rigorous IIT-JEE preparation with deep problem solving, full-length mock tests and exam temperament training for IITs, NITs and top engineering colleges.</p>
+    </div>
+    <div class="course-card reveal">
+      <span class="course-priority">Board Excellence</span>
+      <span class="course-icon">📖</span>
+      <h3>PUC Science (11th – 12th)</h3>
+      <p>Simultaneous preparation for Karnataka board exams and competitive entrance tests. Strong focus on PCB and PCM for state top ranks.</p>
+    </div>
+    <div class="course-card reveal">
+      <span class="course-priority">Board Excellence</span>
+      <span class="course-icon">🎯</span>
+      <h3>SSLC</h3>
+      <p>Comprehensive board exam preparation with proven strategies, regular assessments and personal mentoring for district-level top scores.</p>
+    </div>
+    <div class="course-card reveal">
+      <span class="course-icon">📚</span>
+      <h3>Upper Primary (6th – 8th)</h3>
+      <p>Deepening concepts in Science, Mathematics and Languages with individual attention — building the foundation for competitive years ahead.</p>
+    </div>
+    <div class="course-card reveal">
+      <span class="course-icon">🎒</span>
+      <h3>Kindergarten &amp; Primary</h3>
+      <p>Where curiosity meets structured learning. Building strong academic and personal foundations from day one — the right start makes everything easier.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section id="why">
+  <div class="section-tag">Why Choose Us</div>
+  <h2 class="section-title">Why Tumkur Families<br><em>Trust Us</em> Year After Year</h2>
+  <p class="section-sub">We don't just teach subjects. We build the confidence and capability every student needs to succeed at the highest level.</p>
+  <div class="why-grid">
+    <div class="why-card reveal">
+      <div class="why-icon">🏆</div>
+      <h3>Proven Results Every Year</h3>
+      <p>Consistent NEET and JEE qualifiers, board toppers and state-rank achievers — our results make the case better than any brochure.</p>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">👨‍🏫</div>
+      <h3>Expert Faculty</h3>
+      <p>Subject specialists with 10–20 years of teaching expertise and a genuine, personal commitment to every student's growth and success.</p>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">👥</div>
+      <h3>Small, Focused Batches</h3>
+      <p>Every student gets personal attention. We intentionally keep batch sizes small so no one falls behind or goes unnoticed in class.</p>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">📊</div>
+      <h3>Weekly Tests &amp; Parent Reports</h3>
+      <p>Regular assessments, detailed performance analytics and parent updates after every test cycle so families always stay informed.</p>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">🏠</div>
+      <h3>KG to PUC Under One Roof</h3>
+      <p>No need to switch institutes as your child grows. Grand Myra grows with them — from their first day of school to their exam hall.</p>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">📞</div>
+      <h3>Always Accessible</h3>
+      <p>Faculty available beyond class hours for doubt-clearing. Parents can reach us anytime — we believe in open, honest communication.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ACHIEVERS GALLERY -->
+<section id="achievers">
+  <div class="section-tag">Hall of Fame</div>
+  <h2 class="section-title">Our <em>Star Achievers</em></h2>
+  <p class="section-sub">From All India Ranks in NEET &amp; JEE to State Board toppers — these are Grand Myra Academy's finest. Every name here is a story of dedication and excellent coaching. <em style="font-style:normal;color:var(--accent2);font-size:.85rem;opacity:.7;">(Replace with actual student photos)</em></p>
+  <div class="achievers-grid">
+    <div class="achiever-card reveal">
+      <img class="achiever-img" src="https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=600&h=440&fit=crop&crop=top&q=80" alt="Achiever">
+      <div class="achiever-overlay">
+        <div class="achiever-rank">AIR 1,842 — NEET 2023</div>
+        <div class="achiever-name">Priya Nandakumar</div>
+        <div class="achiever-desc">MBBS — Bangalore Medical College</div>
+        <div class="achiever-year">Score: 672 / 720</div>
+      </div>
+    </div>
+    <div class="achiever-card reveal">
+      <img class="achiever-img" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600&h=440&fit=crop&crop=top&q=80" alt="Achiever">
+      <div class="achiever-overlay">
+        <div class="achiever-rank">AIR 4,310 — JEE Advanced</div>
+        <div class="achiever-name">Rohan Hegde</div>
+        <div class="achiever-desc">B.Tech CSE — NIT Surathkal</div>
+        <div class="achiever-year">Score: 248 / 360 · 2023</div>
+      </div>
+    </div>
+    <div class="achiever-card reveal">
+      <img class="achiever-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&h=440&fit=crop&crop=top&q=80" alt="Achiever">
+      <div class="achiever-overlay">
+        <div class="achiever-rank">AIR 2,915 — NEET 2024</div>
+        <div class="achiever-name">Sneha Kulkarni</div>
+        <div class="achiever-desc">MBBS — Mysore Medical College</div>
+        <div class="achiever-year">Score: 658 / 720</div>
+      </div>
+    </div>
+    <div class="achiever-card reveal">
+      <img class="achiever-img" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=440&fit=crop&crop=top&q=80" alt="Achiever">
+      <div class="achiever-overlay">
+        <div class="achiever-rank">State Rank 14 — PUC Science</div>
+        <div class="achiever-name">Arjun Patil</div>
+        <div class="achiever-desc">Karnataka Board · 98.4% Aggregate</div>
+        <div class="achiever-year">PUC Board 2024</div>
+      </div>
+    </div>
+    <div class="achiever-card reveal">
+      <img class="achiever-img" src="https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=600&h=440&fit=crop&crop=top&q=80" alt="Achiever">
+      <div class="achiever-overlay">
+        <div class="achiever-rank">AIR 6,120 — JEE Mains</div>
+        <div class="achiever-name">Kavitha Reddy</div>
+        <div class="achiever-desc">B.Tech — NITK Mangalore</div>
+        <div class="achiever-year">Percentile: 99.3 · 2024</div>
+      </div>
+    </div>
+    <div class="achiever-card reveal">
+      <img class="achiever-img" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600&h=440&fit=crop&crop=top&q=80" alt="Achiever">
+      <div class="achiever-overlay">
+        <div class="achiever-rank">District Rank 1 — SSLC</div>
+        <div class="achiever-name">Kiran Sharma</div>
+        <div class="achiever-desc">Tumkur District Topper · 624/625</div>
+        <div class="achiever-year">SSLC Board 2023</div>
+      </div>
+    </div>
+    <div class="achiever-card reveal">
+      <img class="achiever-img" src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=600&h=440&fit=crop&crop=top&q=80" alt="Achiever">
+      <div class="achiever-overlay">
+        <div class="achiever-rank">AIR 3,488 — NEET 2022</div>
+        <div class="achiever-name">Divya Srinivas</div>
+        <div class="achiever-desc">MBBS — Kempegowda Institute</div>
+        <div class="achiever-year">Score: 651 / 720</div>
+      </div>
+    </div>
+    <div class="achiever-card reveal">
+      <img class="achiever-img" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=600&h=440&fit=crop&crop=top&q=80" alt="Achiever">
+      <div class="achiever-overlay">
+        <div class="achiever-rank">State Rank 22 — PUC Science</div>
+        <div class="achiever-name">Suresh Nagaraj</div>
+        <div class="achiever-desc">Karnataka Board · 97.8% Aggregate</div>
+        <div class="achiever-year">PUC Board 2023</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section id="results">
+  <div class="section-tag">Our Track Record</div>
+  <h2 class="section-title">Numbers That<br><em>Speak for Themselves</em></h2>
+  <p class="section-sub">Year after year, Grand Myra Academy students go on to top medical colleges, engineering institutes and board toppers lists across Karnataka.</p>
+  <div class="stats-row">
+    <div class="stat-box reveal"><h2>500<span>+</span></h2><p>Students Enrolled</p></div>
+    <div class="stat-box reveal"><h2>120<span>+</span></h2><p>NEET &amp; JEE Qualifiers</p></div>
+    <div class="stat-box reveal"><h2>15<span>+</span></h2><p>Years of Excellence</p></div>
+    <div class="stat-box reveal"><h2>98<span>%</span></h2><p>Parent Satisfaction</p></div>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card reveal">
+      <div class="stars">★★★★★</div>
+      <p>"Zamrud sir rebuilt my Chemistry from scratch and never let me lose confidence. This year I qualified NEET with AIR 2,841 — Grand Myra made it possible."</p>
+      <div class="t-author"><div class="t-avatar">A</div><div><h4>Aishwarya Hegde</h4><p>NEET 2024 Qualifier</p></div></div>
+    </div>
+    <div class="testimonial-card reveal">
+      <div class="stars">★★★★★</div>
+      <p>"Within three months my son's confidence completely changed. He scored 618/625 and ranked among Tumkur district's top students in SSLC boards." - Savitha</p>
+      <div class="t-author"><div class="t-avatar">P</div><div><h4>Ramesh</h4><p>Parent of SSLC Topper</p></div></div>
+    </div>
+    <div class="testimonial-card reveal">
+      <div class="stars">★★★★★</div>
+      <p>"The faculty here don't just solve problems — they make you understand why. I cracked JEE Mains with 99.1 percentile and got into NIT Surathkal."</p>
+      <div class="t-author"><div class="t-avatar">R</div><div><h4>Nikhil Shetty</h4><p>JEE 2024 Qualifier</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FACULTY -->
+<section id="faculty">
+  <div class="section-tag">Our Faculty</div>
+  <h2 class="section-title">The Minds Behind<br><em>Every Success Story</em></h2>
+  <p class="section-sub">Experienced educators who bring deep subject mastery and a genuine, personal care for every student they mentor. <em style="font-style:normal;color:var(--accent2);font-size:.85rem;opacity:.7;">(Replace with actual photos)</em></p>
+  <div class="faculty-grid">
+    <div class="faculty-card featured reveal">
+      <img class="faculty-photo" src="Zamrud sir.png" alt="Zamrud Khan Sir">
+      <h3>Zamrud Khan Sir</h3>
+      <div class="faculty-subject">Chemistry</div>
+      <div class="faculty-degree">M.Sc. Chemistry</div>
+      <span class="faculty-exp">15+ Years Experience</span>
+    </div>
+    <div class="faculty-card reveal">
+      <img class="faculty-photo" src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=top&q=80" alt="Faculty">
+      <h3>Rajesh Venkatesh Sir</h3>
+      <div class="faculty-subject">Physics</div>
+      <div class="faculty-degree">M.Sc. Physics, IISc Alumni</div>
+      <span class="faculty-exp">12+ Years Experience</span>
+    </div>
+    <div class="faculty-card reveal">
+      <img class="faculty-photo" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop&crop=top&q=80" alt="Faculty">
+      <h3>Preethi Anand Ma'am</h3>
+      <div class="faculty-subject">Biology</div>
+      <div class="faculty-degree">M.Sc. Life Sciences</div>
+      <span class="faculty-exp">10+ Years Experience</span>
+    </div>
+    <div class="faculty-card reveal">
+      <img class="faculty-photo" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&fit=crop&crop=top&q=80" alt="Faculty">
+      <h3>Kiran Murthy Sir</h3>
+      <div class="faculty-subject">Mathematics</div>
+      <div class="faculty-degree">M.Sc. Mathematics</div>
+      <span class="faculty-exp">14+ Years Experience</span>
+    </div>
+    <div class="faculty-card reveal">
+      <img class="faculty-photo" src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=top&q=80" alt="Faculty">
+      <h3>Anitha Shetty Ma'am</h3>
+      <div class="faculty-subject">English &amp; Languages</div>
+      <div class="faculty-degree">M.A. English Literature</div>
+      <span class="faculty-exp">8+ Years Experience</span>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-tag">Getting Started</div>
+  <h2 class="section-title">Three Simple Steps<br>to <em>Begin the Journey</em></h2>
+  <p class="section-sub">Joining Grand Myra Academy is straightforward. We make sure every family feels fully informed and confident before making any decision.</p>
+  <div class="steps-row">
+    <div class="step-card reveal">
+      <div class="step-number">1</div>
+      <h3>Book a Free Demo</h3>
+      <p>Call us or fill the form below. We'll schedule a free demo class at your convenience — zero commitment, zero pressure.</p>
+    </div>
+    <div class="step-card reveal">
+      <div class="step-number">2</div>
+      <h3>Meet Our Faculty</h3>
+      <p>Visit the institute, see the environment and ask every question you have. Informed parents raise the most confident students.</p>
+    </div>
+    <div class="step-card reveal">
+      <div class="step-number">3</div>
+      <h3>Enroll &amp; Begin</h3>
+      <p>Choose your batch, complete enrollment and your child's journey to excellence begins from day one — fully supported throughout.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DIGITAL FOMO -->
+<section id="digital">
+  <div class="digital-inner">
+
+    
+</section>
+
+<!-- CTA BANNER -->
+<section id="cta-banner">
+  <div style="position:relative;z-index:2;">
+    <div class="batch-badge">🔔 New Batch Starting Soon — Limited Seats Available</div>
+    <h2 class="section-title" style="max-width:620px;margin:0 auto .9rem;color:white;">Don't Wait Until<br><em style="color:#93c5fd;">Seats Fill Up</em></h2>
+    <p style="color:#cbd5e1;font-size:1.02rem;line-height:1.75;max-width:520px;margin:0 auto 2.5rem;">Book a free demo class today and experience the difference in teaching quality, personal attention and results that speak for themselves.</p>
+    <a href="#contact" class="btn-primary" style="font-size:1.02rem;padding:1.05rem 3rem;">Reserve Your Seat Now</a>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-tag">Get In Touch</div>
+  <h2 class="section-title">Book Your Free<br><em>Demo Class Today</em></h2>
+  <p class="section-sub">Fill in your details and our counselor will contact you shortly to schedule your free demo class — no obligation required.</p>
+  <div class="contact-grid">
+    <div class="contact-form reveal">
+      <input type="text" placeholder="Student / Parent Name">
+      <input type="tel" placeholder="WhatsApp Number">
+      <select>
+        <option value="">Select Course / Class</option>
+        <option>NEET Coaching</option>
+        <option>JEE Coaching</option>
+        <option>PUC Science (11th–12th)</option>
+        <option>SSLC (9th–10th)</option>
+        <option>Upper Primary (6th–8th)</option>
+        <option>Kindergarten &amp; Primary</option>
+      </select>
+      <textarea rows="3" placeholder="Any specific questions or requirements?"></textarea>
+      <button class="btn-primary" style="width:100%;padding:1.05rem;font-size:1rem;border:none;cursor:pointer;">Book Free Demo Class</button>
+    </div>
+    <div class="contact-info">
+      <div class="ci-card reveal"><div class="ci-icon">📞</div><div><h4>Call Us</h4><p>+91 9844651040</p></div></div>
+      <div class="ci-card reveal"><div class="ci-icon">📍</div><div><h4>Visit Us</h4><p>Melkote Main Rd, Melekote, Sadashivanagar, Tumkur, Karnataka 572101</p></div></div>
+      <div class="ci-card reveal"><div class="ci-icon">⏰</div><div><h4>Office Hours</h4><p>Monday – Saturday: 8:00 AM – 7:00 PM</p></div></div>
+      <div class="ci-card reveal"><div class="ci-icon">💬</div><div><h4>WhatsApp</h4><p>+91 9844651040</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#" class="logo">Grand Myra <span>Academy</span></a>
+      <p>Tumkur's most trusted coaching institute — from Kindergarten to NEET &amp; JEE. Helping students achieve their dreams since [Year].</p>
+    </div>
+    <div class="footer-col">
+      <h4>Courses</h4>
+      <ul>
+        <li><a href="#courses">NEET Coaching</a></li>
+        <li><a href="#courses">JEE Coaching</a></li>
+        <li><a href="#courses">PUC Science</a></li>
+        <li><a href="#courses">SSLC</a></li>
+        <li><a href="#courses">Upper Primary</a></li>
+        <li><a href="#courses">KG &amp; Primary</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#why">Why Us</a></li>
+        <li><a href="#achievers">Achievers</a></li>
+        <li><a href="#faculty">Faculty</a></li>
+        <li><a href="#results">Results</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col footer-contact">
+      <h4>Contact</h4>
+      <p><strong>📍</strong> Melkote Main Rd, Melekote, Sadashivanagar, 572101<br>Tumkur, Karnataka</p>
+      <p style="margin-top:.65rem"><strong>📞</strong> +91 9844651040</p>
+      <p style="margin-top:.35rem"><strong>📧</strong> [Email Placeholder]</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Grand Myra Academy, Tumkur. All rights reserved.</p>
+    <p>Built with ❤️ for Tumkur's students</p>
+  </div>
+</footer>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+/* CURSOR */
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function a(){cur.style.left=mx+'px';cur.style.top=my+'px';rx+=(mx-rx)*.14;ry+=(my-ry)*.14;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a);})();
+
+/* PARTICLES */
+const canvas=document.getElementById('pcanvas'),ctx=canvas.getContext('2d');
+let W,H,pts=[];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+resize();window.addEventListener('resize',resize);
+function Pt(){this.x=Math.random()*W;this.y=Math.random()*H;this.r=Math.random()*1.4+.3;this.vx=(Math.random()-.5)*.22;this.vy=(Math.random()-.5)*.22;this.a=Math.random()*.45+.1;}
+for(let i=0;i<85;i++)pts.push(new Pt());
+(function dp(){
+  ctx.clearRect(0,0,W,H);
+  pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(59,130,246,${p.a})`;ctx.fill();
+  });
+  for(let i=0;i<pts.length;i++){for(let j=i+1;j<pts.length;j++){
+    const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+    if(d<110){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(59,130,246,${.055*(1-d/110)})`;ctx.lineWidth=.5;ctx.stroke();}
+  }}
+  requestAnimationFrame(dp);
+})();
+
+/* NAVBAR */
+window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>50));
+function toggleNav(){document.getElementById('mobileNav').classList.toggle('open');}
+
+/* HERO ENTRANCE */
+gsap.timeline({delay:.25})
+  .to('.hero-tag',{opacity:1,y:0,duration:.7,ease:'power3.out'})
+  .to('h1.hero-headline',{opacity:1,y:0,duration:.85,ease:'power3.out'},'-=.35')
+  .to('.hero-sub',{opacity:1,y:0,duration:.7,ease:'power3.out'},'-=.45')
+  .to('.hero-btns',{opacity:1,y:0,duration:.65,ease:'power3.out'},'-=.4')
+  .to('.hero-stats',{opacity:1,y:0,duration:.6,ease:'power3.out'},'-=.3');
+
+/* HERO STAT COUNTER */
+gsap.utils.toArray('.hero-stat h3').forEach(el=>{
+  const txt=el.innerHTML,num=parseInt(txt),suf=txt.replace(/[0-9]/g,'');
+  gsap.fromTo({v:0},{v:num},{duration:2,ease:'power2.out',delay:1.4,onUpdate:function(){el.innerHTML=Math.round(this.targets()[0].v)+suf;}});
+});
+
+/* SCROLL REVEALS */
+gsap.utils.toArray('.reveal').forEach(el=>{
+  gsap.fromTo(el,{opacity:0,y:38},{opacity:1,y:0,duration:.8,ease:'power3.out',
+    scrollTrigger:{trigger:el,start:'top 88%',toggleActions:'play none none none'}});
+});
+gsap.utils.toArray('.section-title,.section-tag,.section-sub').forEach(el=>{
+  gsap.fromTo(el,{opacity:0,y:22},{opacity:1,y:0,duration:.7,ease:'power3.out',
+    scrollTrigger:{trigger:el,start:'top 90%'}});
+});
+
+/* STAT COUNTER */
+gsap.utils.toArray('.stat-box h2').forEach(el=>{
+  const txt=el.textContent,num=parseInt(txt),suf=txt.replace(/[0-9]/g,'');
+  ScrollTrigger.create({trigger:el,start:'top 85%',onEnter:()=>{
+    gsap.fromTo({v:0},{v:num},{duration:1.8,ease:'power2.out',
+      onUpdate:function(){el.innerHTML=Math.round(this.targets()[0].v)+suf;}});
+  }});
+});
+
+/* STAGGER COURSE CARDS */
+ScrollTrigger.create({trigger:'#courses',start:'top 70%',onEnter:()=>{
+  gsap.to('.course-card',{opacity:1,y:0,stagger:.1,duration:.65,ease:'power3.out'});
+}});
+
+/* STAGGER ACHIEVER CARDS */
+ScrollTrigger.create({trigger:'#achievers',start:'top 70%',onEnter:()=>{
+  gsap.to('.achiever-card',{opacity:1,y:0,stagger:.08,duration:.65,ease:'power3.out'});
+}});
+</script>
+</body>
+</html>
